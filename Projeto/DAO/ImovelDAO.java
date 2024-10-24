@@ -66,7 +66,7 @@ public class ImovelDAO {
                     System.out.println("\nDADOS DO CLIENTE RELACIONADO: ");
                     System.out.println("Nome: " + nome);
                     System.out.println("CPF: " + cpf);
-                    System.out.println("Endereço: " + endereco);
+                    System.out.println("ENDEREÇO: " + endereco);
                     
                 } else {
                     System.out.println("Nenhum cliente relacionado a este imóvel.");

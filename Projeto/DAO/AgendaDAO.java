@@ -115,4 +115,45 @@ public class AgendaDAO {
             e.printStackTrace();
         }
     }
+
+    public static void pesquisarAgendamentosPorCliente(int idCliente) {
+        String sql = "SELECT a.data, a.imovel, c.id_cliente, c.nome, c.cpf, c.endereco, c.email, c.telefone " +
+                     "FROM agenda a INNER JOIN cliente c ON a.id_cliente = c.id_cliente WHERE c.id_cliente = ?";
+        
+        try (PreparedStatement instrucao = conexao.prepareStatement(sql)) {
+            instrucao.setInt(1, idCliente);
+            ResultSet consulta = instrucao.executeQuery();
+    
+            boolean encontrouCompromissos = false;
+    
+            while (consulta.next()) {
+                encontrouCompromissos = true;
+                LocalDate dataEvento = consulta.getDate("data").toLocalDate();
+                String imovel = consulta.getString("imovel");
+                String nome = consulta.getString("nome");
+                String cpf = consulta.getString("cpf");
+                String endereco = consulta.getString("endereco");
+                String email = consulta.getString("email");
+                String telefone = consulta.getString("telefone");
+    
+                System.out.println("\nAgendamento: ");
+                System.out.println("Data: " + dataEvento);
+                System.out.println("Imóvel: " + imovel);
+                System.out.println("\nDados do cliente que agendou o imóvel: ");
+                System.out.println("Nome do cliente: " + (nome != null ? nome : "Este imóvel não possui um cliente cadastrado"));
+                System.out.println("CPF do Cliente: " + cpf);
+                System.out.println("Endereço do Cliente: " + endereco);
+                System.out.println("Email do Cliente: " + email);
+                System.out.println("Telefone: " + telefone);
+            }
+    
+            if (!encontrouCompromissos) {
+                System.out.println("Não há compromissos agendados para este cliente.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }    
+
+
 }

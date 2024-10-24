@@ -10,7 +10,7 @@ public class UsuarioAdministrador extends Usuario{
 
     //construtor
     public UsuarioAdministrador(String nome, String cpf, String login, String senha) throws DadosInvalidosException{
-        super (nome,cpf);
+        super (nome, cpf);
         validarCampos(nome, cpf, login, senha);
         this.login = login;
         this.senha = senha;
@@ -73,4 +73,5 @@ public class UsuarioAdministrador extends Usuario{
         sb.append("Senha: ").append(senha).append("\n"); // Geralmente não é recomendado exibir senhas
         return sb.toString();
     }
+
 }

@@ -1,8 +1,6 @@
 package Projeto.Imobiliaria;
 import Projeto.Entidades.Contrato;
-import Projeto.DAO.BancoDeDados;
 import Projeto.DAO.ContratoDAO;
-
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,14 +12,11 @@ public class MenuContrato {
         Scanner scanner = new Scanner(System.in);
         ContratoDAO contratoDAO = new ContratoDAO();
 
-        try {
-            // Conectar ao banco de dados
-            BancoDeDados.iniciarConexao();
-
-            System.out.println("Conexão ao banco de dados estabelecida com sucesso!");
 
             // Menu para escolher as operações
             while (true) {
+                System.out.println();
+                System.out.println("=== GERENCIAR CONTRATO ===");
                 System.out.println("\nEscolha uma operação:");
                 System.out.println("1. Cadastrar contrato");
                 System.out.println("2. Listar contratos");
@@ -34,20 +29,23 @@ public class MenuContrato {
 
                 switch (opcao) {
                     case 1:
+                        System.out.println();
                         cadastrarContrato(scanner, contratoDAO);
                         break;
                     case 2:
+                        System.out.println();
                         contratoDAO.listarContratos();
                         break;
                     case 3:
+                        System.out.println();
                         editarContrato(scanner, contratoDAO);
                         break;
                     case 4:
+                        System.out.println();
                         deletarContrato(scanner, contratoDAO);
                         break;
                     case 5:
-                        BancoDeDados.fecharConexao();
-                        System.out.println("Conexão ao banco de dados encerrada.");
+                        
                         return;
                     default:
                         System.out.println("Opção inválida!");
@@ -55,9 +53,6 @@ public class MenuContrato {
                 }
             }
 
-        } catch (SQLException e) {
-            System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
-        }
     }
 
     // Método para cadastrar um contrato

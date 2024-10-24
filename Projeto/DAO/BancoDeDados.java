@@ -17,7 +17,6 @@ public class BancoDeDados {
 
     private BancoDeDados() {
     }
-
     // Método para obter a conexão com o banco de dados
     private static Connection getConnection() throws SQLException {
         if (conn == null || conn.isClosed()) {

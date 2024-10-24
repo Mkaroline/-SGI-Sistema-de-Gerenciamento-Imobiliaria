@@ -50,4 +50,5 @@ public abstract class Usuario {
     public String toString() {
         return ", Nome: " + nome + ", cpf: " + cpf;
     }
+
 }

@@ -12,20 +12,40 @@ public class UsuarioClienteDAO {
     String sql;
     public static Connection conexao;
     public void cadastrarCliente(UsuarioCliente cliente) {
-        sql = "INSERT INTO cliente (nome, cpf, endereco, email, telefone) VALUES (?, ?, ?, ?, ?)";
+        sql = "INSERT INTO cliente (nome, cpf, endereco, email, telefone, login, senha) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement instrucao = conexao.prepareStatement(sql);
             instrucao.setString(1, cliente.getNome());
             instrucao.setString(2, cliente.getCpf());
             instrucao.setString(3, cliente.getEndereco());
             instrucao.setString(4, cliente.getEmail());
-            instrucao.setInt(5, cliente.getTelefone()); 
+            instrucao.setLong(5, cliente.getTelefone()); 
+            instrucao.setString(6, cliente.getLogin());
+            instrucao.setString(7, cliente.getSenha());  
             instrucao.executeUpdate();
             System.out.println("Cliente cadastrado com sucesso!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
+    public boolean validarLoginCliente(String login, String senha) {
+        String sql = "SELECT * FROM cliente WHERE login = ? AND senha = ?";
+        try {
+            PreparedStatement instrucao = conexao.prepareStatement(sql);
+            instrucao.setString(1, login);
+            instrucao.setString(2, senha);
+            ResultSet resultado = instrucao.executeQuery();
+    
+            if (resultado.next()) {
+                return true; 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; 
+    }
+    
     
     public void listarCliente() {
        
@@ -40,14 +60,19 @@ public class UsuarioClienteDAO {
                 String nome = consulta.getString("nome");
                 String cpf = consulta.getString("Cpf");
                 String endereco = consulta.getString("endereco");
-                String email = consulta.getString("Email"); // E o bairro
+                String email = consulta.getString("Email"); 
                 int telefone = consulta.getInt("Telefone");
+                String login = consulta.getString("login");
+                String senha = consulta.getString("senha");
+
                 System.out.println("DADOS DO CLIENTE");
                 System.out.println("Nome: " + nome);
                 System.out.println("Cpf: " + cpf);
                 System.out.println("Endereço: " + endereco);
                 System.out.println("Email: " + email);
                 System.out.println("Telefone: " + telefone);
+                System.out.println("Login: " + login);
+                System.out.println("senha: " + senha);
                 System.out.println("\n");
             }
             if (!clientesEncontrados) {
@@ -64,7 +89,7 @@ public class UsuarioClienteDAO {
        
         sql = "UPDATE cliente SET " + coluna + " = ? WHERE nome = ?";
         try {
-            // Verificar se o nome do cliente existe
+          
             PreparedStatement verificaNome = conexao.prepareStatement("SELECT COUNT(*) AS total FROM cliente WHERE nome = ?");
             verificaNome.setString(1, nome);
             ResultSet resultado = verificaNome.executeQuery();
@@ -75,7 +100,6 @@ public class UsuarioClienteDAO {
                 return;
             }
 
-            // Atualizar o cliente
             PreparedStatement instrucao = conexao.prepareStatement(sql);
 
             switch (coluna) {  
@@ -127,6 +151,29 @@ public class UsuarioClienteDAO {
             System.err.println("Erro ao deletar o cliente: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    public UsuarioCliente buscarClientePorLogin(String login) throws SQLException {
+        String sql = "SELECT * FROM cliente WHERE login = ?";
+        try (PreparedStatement instrucao = conexao.prepareStatement(sql)) {
+            instrucao.setString(1, login);
+            ResultSet consulta = instrucao.executeQuery();
+    
+            if (consulta.next()) {
+            
+                UsuarioCliente cliente = new UsuarioCliente(sql, sql, sql, sql, 0, login, sql);
+                cliente.setNome(consulta.getString("nome"));
+                cliente.setCpf(consulta.getString("Cpf"));
+                cliente.setEndereco(consulta.getString("endereco"));
+                cliente.setEmail(consulta.getString("Email"));
+                cliente.setTelefone(consulta.getInt("Telefone"));
+                cliente.setLogin(consulta.getString("login"));
+                cliente.setSenha(consulta.getString("senha")); 
+    
+                return cliente;
+            }
+        }
+        return null; 
     }
     
 }

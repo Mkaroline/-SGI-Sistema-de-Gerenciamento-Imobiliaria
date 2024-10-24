@@ -1,8 +1,6 @@
 package Projeto.Imobiliaria;
 import Projeto.Entidades.UsuarioCliente;
-import Projeto.DAO.BancoDeDados;
 import Projeto.DAO.UsuarioClienteDAO;
-
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -11,14 +9,11 @@ public class MenuCliente {
         Scanner scanner = new Scanner(System.in);
         UsuarioClienteDAO usuarioClienteDAO = new UsuarioClienteDAO();
 
-        try {
-            // Conectar ao banco de dados
-            BancoDeDados.iniciarConexao();
-
-            System.out.println("Conexão ao banco de dados estabelecida com sucesso!");
 
             // Menu para escolher as operações
             while (true) {
+                System.out.println();
+                System.out.println("=== GERENCIAR CLIENTE ===");
                 System.out.println("\nEscolha uma operação:");
                 System.out.println("1. Cadastrar cliente");
                 System.out.println("2. Listar clientes");
@@ -31,20 +26,23 @@ public class MenuCliente {
 
                 switch (opcao) {
                     case 1:
+                        System.out.println();
                         cadastrarCliente(scanner, usuarioClienteDAO);
                         break;
                     case 2:
+                        System.out.println();
                         usuarioClienteDAO.listarCliente();
                         break;
                     case 3:
+                        System.out.println();
                         editarCliente(scanner, usuarioClienteDAO);
                         break;
                     case 4:
+                        System.out.println();
                         deletarCliente(scanner, usuarioClienteDAO);
                         break;
                     case 5:
-                        BancoDeDados.fecharConexao();
-                        System.out.println("Conexão ao banco de dados encerrada.");
+    
                         return;
                     default:
                         System.out.println("Opção inválida!");
@@ -52,32 +50,42 @@ public class MenuCliente {
                 }
             }
 
-        } catch (SQLException e) {
-            System.err.println("Erro ao conectar ao banco de dados: " + e.getMessage());
-        }
+       
     }
 
     // Método para cadastrar um cliente
     public static void cadastrarCliente(Scanner scanner, UsuarioClienteDAO usuarioClienteDAO) {
         System.out.println("=== Cadastro de Cliente ===");
+    
         System.out.print("Nome: ");
         String nome = scanner.nextLine();
+    
         System.out.print("CPF: ");
         String cpf = scanner.nextLine();
+    
         System.out.print("Endereço: ");
         String endereco = scanner.nextLine();
+    
         System.out.print("Email: ");
         String email = scanner.nextLine();
+    
         System.out.print("Telefone: ");
         int telefone = scanner.nextInt();
-        scanner.nextLine(); // Consumir nova linha
-
-
-        UsuarioCliente novoCliente = new UsuarioCliente(nome, cpf, endereco, email, telefone);
+        scanner.nextLine();  // Consumir a nova linha restante após o nextInt()
+    
+        System.out.print("Login: ");
+        String login = scanner.nextLine();  // Corrigido para "login" com inicial minúscula, por convenção
+    
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();  // Corrigido para "senha" com inicial minúscula, por convenção
+    
+        // Criar o objeto UsuarioCliente com os dados fornecidos
+        UsuarioCliente novoCliente = new UsuarioCliente(nome, cpf, endereco, email, telefone, login, senha);
+        // Chamar o método para cadastrar o cliente
         usuarioClienteDAO.cadastrarCliente(novoCliente);
-
-        
+    
     }
+    
 
     // Método para editar um cliente
     public static void editarCliente(Scanner scanner, UsuarioClienteDAO usuarioClienteDAO) {
@@ -87,7 +95,7 @@ public class MenuCliente {
         System.out.println("Informe a coluna que deseja editar (nome, cpf, endereco, email, telefone):");
         String coluna = scanner.nextLine();
 
-        UsuarioCliente clienteEditado = new UsuarioCliente(nomeCliente, coluna, nomeCliente, coluna, 0);
+        UsuarioCliente clienteEditado = new UsuarioCliente(nomeCliente, coluna, coluna, coluna, 0, nomeCliente, coluna);
 
         switch (coluna) {
             case "nome":
